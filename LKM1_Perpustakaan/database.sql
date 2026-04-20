@@ -1,7 +1,7 @@
--- Buat Schema
+-- 1. Buat Schema
 CREATE SCHEMA IF NOT EXISTS perpustakaan;
 
--- Tabel 1: Kategori Buku
+-- 2. DDL (CREATE TABLE)
 CREATE TABLE IF NOT EXISTS perpustakaan.kategori (
     id_kategori SERIAL PRIMARY KEY,
     nama_kategori VARCHAR(50) NOT NULL,
@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS perpustakaan.kategori (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabel 2: Buku (Bereselasi dengan kategori)
 CREATE TABLE IF NOT EXISTS perpustakaan.buku (
     id_buku SERIAL PRIMARY KEY,
     judul VARCHAR(150) NOT NULL,
@@ -17,10 +16,9 @@ CREATE TABLE IF NOT EXISTS perpustakaan.buku (
     id_kategori INT REFERENCES perpustakaan.kategori(id_kategori),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL -- Memenuhi syarat rubrik "Soft Delete"
+    deleted_at TIMESTAMP NULL
 );
 
--- Tabel 3: Peminjaman (Berelasi dengan buku)
 CREATE TABLE IF NOT EXISTS perpustakaan.peminjaman (
     id_peminjaman SERIAL PRIMARY KEY,
     id_buku INT REFERENCES perpustakaan.buku(id_buku),
@@ -30,33 +28,29 @@ CREATE TABLE IF NOT EXISTS perpustakaan.peminjaman (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Mempercepat pencarian API jika user mencari buku berdasarkan judul
-CREATE INDEX idx_buku_judul ON perpustakaan.buku(judul);
+CREATE TABLE IF NOT EXISTS perpustakaan.users (
+    id_user SERIAL PRIMARY KEY,
+    nama VARCHAR(100) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
--- Mempercepat pencarian API jika admin ingin melihat siapa saja yang statusnya masih 'Dipinjam'
+-- 3. INDEXES (Mempercepat Pencarian)
+CREATE INDEX idx_buku_judul ON perpustakaan.buku(judul);
 CREATE INDEX idx_peminjaman_status ON perpustakaan.peminjaman(status);
 
+-- 4. INSERT SAMPLE DATA (Minimal 5 baris)
+INSERT INTO perpustakaan.kategori (nama_kategori) VALUES ('Fiksi'), ('Sains'), ('Sejarah'), ('Teknologi'), ('Biografi');
 
--- Insert Kategori (5 baris)
-INSERT INTO perpustakaan.kategori (nama_kategori) VALUES 
-('Fiksi'), 
-('Sains'), 
-('Sejarah'), 
-('Teknologi'), 
-('Biografi');
-
--- Insert Buku (5 baris)
 INSERT INTO perpustakaan.buku (judul, pengarang, id_kategori) VALUES 
-('Laskar Pelangi', 'Andrea Hirata', 1),
-('Kosmos', 'Carl Sagan', 2),
-('Sapiens', 'Yuval Noah Harari', 3),
-('Clean Code', 'Robert C. Martin', 4),
+('Laskar Pelangi', 'Andrea Hirata', 1), ('Kosmos', 'Carl Sagan', 2),
+('Sapiens', 'Yuval Noah Harari', 3), ('Clean Code', 'Robert C. Martin', 4),
 ('Steve Jobs', 'Walter Isaacson', 5);
 
--- Insert Peminjaman (5 baris)
 INSERT INTO perpustakaan.peminjaman (id_buku, nama_peminjam, status) VALUES 
-(1, 'Danang', 'Dipinjam'),
-(2, 'Farell', 'Dikembalikan'),
-(3, 'Tunggul', 'Dipinjam'),
-(4, 'Zein', 'Dikembalikan'),
-(5, 'Falah', 'Dipinjam');
+(1, 'Danang', 'Dipinjam'), (2, 'Farell', 'Dikembalikan'),
+(3, 'Tunggul', 'Dipinjam'), (4, 'Zein', 'Dikembalikan'), (5, 'Falah', 'Dipinjam');
+
+-- Insert 1 Admin User (password: admin123)
+INSERT INTO perpustakaan.users (nama, username, password) VALUES ('Admin Perpustakaan', 'admin', 'admin123');
