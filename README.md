@@ -1,36 +1,57 @@
-# REST API Sistem Manajemen Perpustakaan
+# REST API Sistem Manajemen Perpustakaan Plus (LKM 1 PAA)
 
 ## a) Deskripsi Project
-Project ini adalah sebuah REST API untuk mengelola sistem perpustakaan sederhana. Domain ini dipilih karena memiliki struktur relasi data yang jelas dan operasi CRUD yang sangat umum. API ini mengelola data Kategori, Buku, dan histori Peminjaman, dilengkapi dengan fitur *Soft Delete* pada data buku.
+Project ini adalah implementasi REST API untuk Sistem Manajemen Perpustakaan. Domain ini dipilih untuk mensimulasikan alur kerja perpustakaan modern yang mencakup pengelolaan katalog buku, kategori, serta transaksi peminjaman oleh petugas. API ini telah dilengkapi dengan sistem keamanan JWT (JSON Web Token) untuk membatasi akses fitur CRUD hanya kepada petugas/admin yang terdaftar.
 
 ## b) Teknologi yang Digunakan
 * **Bahasa Pemrograman:** C#
 * **Framework:** ASP.NET Core Web API (.NET 6/8)
-* **Database:** PostgreSQL
-* **Library Tambahan:** Npgsql (untuk koneksi database)
+* **Database:** PostgreSQL (Relasional dengan 4 Tabel)
+* **Keamanan:** JWT Authentication & Parameterized Queries (Anti-SQL Injection)
+* **Dokumentasi API:** Swagger UI dengan skema Otorisasi Bearer
 
 ## c) Langkah Instalasi & Cara Menjalankan Project
-1. Clone repositori ini ke komputer lokal.
-2. Buka project menggunakan Visual Studio 2022.
-3. Buka file `appsettings.json` dan sesuaikan `ConnectionStrings` dengan konfigurasi PostgreSQL lokal Anda (Host, Port, Database, Username, Password).
-4. Tekan tombol `F5` atau klik icon **Run** di Visual Studio untuk menjalankan aplikasi.
-5. Swagger UI akan otomatis terbuka di browser.
+1. **Clone Repository:** Clone repositori ini ke direktori lokal Anda.
+2. **Setup Database:** Pastikan PostgreSQL sudah berjalan, buat database baru, dan eksekusi file `database.sql` (instruksi ada di poin d).
+3. **Konfigurasi:** Buka file `appsettings.json`, sesuaikan `ConnectionStrings` dan pastikan port pada bagian `Jwt` sesuai dengan `launchSettings.json` Anda.
+4. **Build & Run:** Buka file `.sln` di Visual Studio 2022, lalu tekan `F5`.
+5. **Akses Swagger:** Browser akan otomatis membuka halaman Swagger UI untuk pengujian API.
 
 ## d) Cara Import Database
-1. Buka pgAdmin dan buat database baru (misal: `lkm1_db`).
-2. Buka **Query Tool** pada database tersebut.
-3. Buka file `database.sql` yang ada di repositori ini, *copy* seluruh isinya.
-4. *Paste* ke Query Tool dan klik **Execute (F5)**. Schema, tabel, relasi, index, dan 5 baris sample data akan otomatis terbuat.
+1. Buka **pgAdmin** atau tool database PostgreSQL lainnya.
+2. Buat database baru bernama `lkm1_perpustakaan` (atau nama lain).
+3. Buka **Query Tool** pada database tersebut.
+4. Cari file `database.sql` di root folder project ini.
+5. Salin dan tempel seluruh isinya ke Query Tool, lalu klik **Execute (F5)**.
+6. Database siap digunakan dengan 4 tabel (`kategori`, `buku`, `peminjaman`, `users`) dan data sampel.
 
-## e) Daftar Endpoint API (Tabel Buku)
+## e) Daftar Endpoint Lengkap
 
+### 🔐 Authentication (Public)
 | Method | URL | Keterangan |
 | :--- | :--- | :--- |
-| `GET` | `/api/Buku` | Mengambil seluruh daftar buku yang tersedia (tidak termasuk yang di-soft delete) |
+| `POST` | `/api/Auth/register` | Mendaftarkan akun petugas/admin baru |
+| `POST` | `/api/Auth/login` | Login petugas untuk mendapatkan Token JWT |
+
+### 📚 Manajemen Buku (Protected - Require Token)
+| Method | URL | Keterangan |
+| :--- | :--- | :--- |
+| `GET` | `/api/Buku` | Mengambil seluruh daftar buku (Non-Deleted) |
 | `GET` | `/api/Buku/{id}` | Mengambil detail satu buku berdasarkan ID |
-| `POST` | `/api/Buku` | Menambahkan data buku baru ke database |
-| `PUT` | `/api/Buku/{id}` | Memperbarui data buku yang sudah ada berdasarkan ID |
-| `DELETE` | `/api/Buku/{id}` | Menghapus buku (Mengimplementasikan Soft Delete dengan mengisi kolom `deleted_at`) |
+| `POST` | `/api/Buku` | Menambahkan data buku baru |
+| `PUT` | `/api/Buku/{id}` | Memperbarui informasi buku |
+| `DELETE` | `/api/Buku/{id}` | Menghapus buku (Implementasi Soft Delete) |
+
+### 🤝 Transaksi Peminjaman (Protected - Require Token)
+| Method | URL | Keterangan |
+| :--- | :--- | :--- |
+| `GET` | `/api/Peminjaman` | Melihat histori seluruh peminjaman |
+| `POST` | `/api/Peminjaman` | Mencatat transaksi peminjaman buku baru |
+| `PUT` | `/api/Peminjaman/Kembalikan/{id}` | Mengupdate status buku menjadi "Dikembalikan" |
 
 ## f) Link Video Presentasi
-[Tonton Video Demonstrasi API di YouTube](LINK_YOUTUBE_KAMU_DISINI)
+[Klik di sini untuk menonton Video Presentasi LKM 1 di YouTube](ISI_LINK_YOUTUBE_ANDA_DISINI)
+
+---
+**Dosen Pengampu:** Dr. Dwiretno Istiyadi S, ST., M.Kom. & Narandha Arya Ranggianto S.Kom. M.Kom.  
+**Fakultas Ilmu Komputer - Universitas Jember**
