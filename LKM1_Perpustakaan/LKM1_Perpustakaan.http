@@ -1,0 +1,6 @@
+@LKM1_Perpustakaan_HostAddress = http://localhost:5028
+
+GET {{LKM1_Perpustakaan_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
