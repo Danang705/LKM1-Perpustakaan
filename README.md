@@ -50,8 +50,4 @@ Project ini adalah implementasi REST API untuk Sistem Manajemen Perpustakaan. Do
 | `PUT` | `/api/Peminjaman/Kembalikan/{id}` | Mengupdate status buku menjadi "Dikembalikan" |
 
 ## f) Link Video Presentasi
-[Klik di sini untuk menonton Video Presentasi LKM 1 di YouTube](ISI_LINK_YOUTUBE_ANDA_DISINI)
-
----
-**Dosen Pengampu:** Dr. Dwiretno Istiyadi S, ST., M.Kom. & Narandha Arya Ranggianto S.Kom. M.Kom.  
-**Fakultas Ilmu Komputer - Universitas Jember**
+[Klik di sini untuk menonton Video Presentasi LKM 1 di YouTube](https://youtu.be/h2HqCnl-O0s)
